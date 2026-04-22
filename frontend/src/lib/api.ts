@@ -1,7 +1,12 @@
 import axios from "axios";
 
+const BASE = import.meta.env.VITE_API_URL
+  ?? (typeof window !== "undefined" && window.location.hostname !== "localhost"
+    ? "https://backend-production-fa44.up.railway.app"
+    : "http://localhost:3001");
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? "/api",
+  baseURL: BASE,
   headers: { "Content-Type": "application/json" },
   withCredentials: true, // sends httpOnly refresh-token cookie automatically
 });
@@ -34,7 +39,7 @@ api.interceptors.response.use(
       isRefreshing = true;
       try {
         // Cookie is sent automatically — no body needed
-        const refreshBase = import.meta.env.VITE_API_URL ?? "/api";
+        const refreshBase = BASE;
         const { data } = await axios.post(`${refreshBase}/auth/refresh`, {}, { withCredentials: true });
         localStorage.setItem("accessToken", data.accessToken);
         original.headers.Authorization = `Bearer ${data.accessToken}`;
