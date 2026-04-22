@@ -40,10 +40,10 @@ const loginSchema = z.object({
 
 function generateTokens(userId: string, role: string) {
   const accessToken = jwt.sign({ userId, role }, process.env.JWT_SECRET!, {
-    expiresIn: process.env.JWT_EXPIRES_IN as string,
+    expiresIn: (process.env.JWT_EXPIRES_IN ?? "15m") as unknown as number,
   });
   const refreshToken = jwt.sign({ userId, role }, process.env.JWT_REFRESH_SECRET!, {
-    expiresIn: process.env.JWT_REFRESH_EXPIRES_IN as string,
+    expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN ?? "7d") as unknown as number,
   });
   return { accessToken, refreshToken };
 }
