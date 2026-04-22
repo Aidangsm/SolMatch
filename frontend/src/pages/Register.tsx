@@ -31,7 +31,7 @@ export default function Register() {
   const onSubmit = async (data: FormData) => {
     try {
       setError("");
-      await authRegister(data);
+      await authRegister(data as Parameters<typeof authRegister>[0]);
       navigate(data.role === "INSTALLER" ? "/installer-dashboard" : "/dashboard");
     } catch (e: unknown) {
       const err = e as { response?: { data?: { error?: string } } };
