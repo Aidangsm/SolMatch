@@ -2,8 +2,8 @@ import axios from "axios";
 
 const BASE = import.meta.env.VITE_API_URL
   ?? (typeof window !== "undefined" && window.location.hostname !== "localhost"
-    ? "https://backend-production-fa44.up.railway.app"
-    : "http://localhost:3001");
+    ? "https://backend-production-fa44.up.railway.app/api"
+    : "http://localhost:3001/api");
 
 export const api = axios.create({
   baseURL: BASE,
