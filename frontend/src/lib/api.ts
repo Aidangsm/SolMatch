@@ -1,9 +1,8 @@
 import axios from "axios";
 
-const BASE = import.meta.env.VITE_API_URL
-  ?? (typeof window !== "undefined" && window.location.hostname !== "localhost"
-    ? "https://backend-production-fa44.up.railway.app/api"
-    : "http://localhost:3001/api");
+const BASE = window.location.hostname === "localhost"
+  ? "http://localhost:3001/api"
+  : "https://backend-production-fa44.up.railway.app/api";
 
 export const api = axios.create({
   baseURL: BASE,
@@ -39,7 +38,9 @@ api.interceptors.response.use(
       isRefreshing = true;
       try {
         // Cookie is sent automatically — no body needed
-        const refreshBase = BASE;
+        const refreshBase = window.location.hostname === "localhost"
+          ? "http://localhost:3001/api"
+          : "https://backend-production-fa44.up.railway.app/api";
         const { data } = await axios.post(`${refreshBase}/auth/refresh`, {}, { withCredentials: true });
         localStorage.setItem("accessToken", data.accessToken);
         original.headers.Authorization = `Bearer ${data.accessToken}`;
