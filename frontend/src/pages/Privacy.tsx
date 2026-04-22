@@ -11,7 +11,7 @@ export default function Privacy() {
       <div className="space-y-6 text-gray-700 leading-relaxed">
         <section>
           <h2 className="text-lg font-bold text-gray-900 mb-2">1. Responsible Party</h2>
-          <p>SolMatch (Pty) Ltd ("SolMatch") is the responsible party under POPIA for personal information collected through the SolMatch Platform. Contact our Information Officer at: privacy@solmatch.co.za</p>
+          <p>SolMatch (Pty) Ltd ("SolMatch") is the responsible party under POPIA for personal information collected through the SolMatch Platform. Contact our Information Officer at: aidangsmit@gmail.com</p>
         </section>
 
         <section>
@@ -78,7 +78,7 @@ export default function Privacy() {
 
         <section>
           <h2 className="text-lg font-bold text-gray-900 mb-2">10. Contact the Information Officer</h2>
-          <p>For any privacy-related requests or complaints: <strong>privacy@solmatch.co.za</strong><br />
+          <p>For any privacy-related requests or complaints: <strong>aidangsmit@gmail.com</strong><br />
           SolMatch (Pty) Ltd, Cape Town, Western Cape, South Africa</p>
           <p className="mt-2 text-sm">Information Regulator of South Africa: <strong>inforeg.org.za</strong> · complaints.IR@justice.gov.za</p>
         </section>

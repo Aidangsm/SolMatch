@@ -55,7 +55,7 @@ export default function Terms() {
 
         <section>
           <h2 className="text-lg font-bold text-gray-900 mb-2">10. Contact</h2>
-          <p>Legal enquiries: legal@solmatch.co.za · SolMatch (Pty) Ltd, Cape Town, South Africa</p>
+          <p>Legal enquiries: aidangsmit@gmail.com · SolMatch (Pty) Ltd, Cape Town, South Africa</p>
         </section>
       </div>
     </div>

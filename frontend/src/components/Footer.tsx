@@ -36,7 +36,7 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-3 text-sm">Contact</h4>
             <ul className="space-y-2 text-sm">
-              <li>hello@solmatch.co.za</li>
+              <li><a href="mailto:aidangsmit@gmail.com" className="hover:text-white transition-colors">aidangsmit@gmail.com</a></li>
               <li>Cape Town, South Africa</li>
             </ul>
           </div>
