@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String    @id @default(cuid())
+  email              String    @unique
+  passwordHash       String
+  role               String    @default("HOMEOWNER")
+  firstName          String
+  lastName           String
+  phone              String?
+  consentGiven       Boolean   @default(false)
+  consentTimestamp   DateTime?
+  dataDeletedAt      DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  refreshTokens      RefreshToken[]
+  passwordResetTokens PasswordResetToken[]
+  quotes             Quote[]        @relation("HomeownerQuotes")
+  installer          Installer?
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Installer {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  companyName     String
+  registrationNo  String?
+  vatNo           String?
+  description     String?
+  province        String
+  city            String
+  address         String?
+  phone           String
+  email           String
+  website         String?
+  logoUrl         String?
+  verified        Boolean   @default(false)
+  badgeActive     Boolean   @default(false)
+  badgeExpiresAt  DateTime?
+  yearsExperience Int       @default(0)
+  systemTypes     String    @default("[]")
+  certifications  String    @default("[]")
+  avgRating       Float     @default(0)
+  totalReviews    Int       @default(0)
+  minSystemSize   Float?
+  maxSystemSize   Float?
+  priceRangeMin   Float?
+  priceRangeMax   Float?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quotes   Quote[]
+  reviews  Review[]
+  payments Payment[]
+
+  @@index([province])
+  @@index([verified])
+  @@index([badgeActive])
+  @@index([province, verified])
+}
+
+model Quote {
+  id             String   @id @default(cuid())
+  homeownerId    String
+  installerId    String
+  status         String   @default("PENDING")
+  leadFeePaid    Boolean  @default(false)
+  monthlyBill    Float
+  systemSizeKw   Float
+  estimatedCost  Float?
+  province       String
+  city           String
+  propertyType   String   @default("RESIDENTIAL")
+  roofType       String?
+  notes          String?
+  installerNotes String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  homeowner User      @relation("HomeownerQuotes", fields: [homeownerId], references: [id])
+  installer Installer @relation(fields: [installerId], references: [id])
+  payments  Payment[]
+
+  @@index([homeownerId])
+  @@index([installerId])
+  @@index([status])
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  quoteId     String
+  installerId String
+  amount      Float
+  status      String   @default("PENDING")
+  pfPaymentId String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  quote     Quote     @relation(fields: [quoteId], references: [id])
+  installer Installer @relation(fields: [installerId], references: [id])
+
+  @@index([quoteId])
+  @@index([installerId])
+}
+
+model Review {
+  id           String   @id @default(cuid())
+  installerId  String
+  reviewerName String
+  rating       Int
+  comment      String?
+  createdAt    DateTime @default(now())
+
+  installer Installer @relation(fields: [installerId], references: [id])
+
+  @@index([installerId])
+}
+
+model ConsentLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  ipHash    String
+  action    String
+  version   String   @default("1.0")
+  createdAt DateTime @default(now())
+}

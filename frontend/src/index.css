@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { @apply font-sans text-gray-900 bg-white antialiased; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 bg-solar-500 hover:bg-solar-600 text-white font-semibold rounded-xl transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-solar-400 focus:ring-offset-2;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-semibold rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2;
+  }
+  .btn-outline {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 border-2 border-solar-500 text-solar-600 hover:bg-solar-50 font-semibold rounded-xl transition-colors;
+  }
+  .input {
+    @apply w-full px-4 py-2.5 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-solar-400 focus:border-solar-400 transition-colors;
+  }
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-gray-100;
+  }
+  .badge-verified {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 bg-brand-50 text-brand-700 text-xs font-semibold rounded-full;
+  }
+  .badge-featured {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 bg-solar-50 text-solar-700 text-xs font-semibold rounded-full;
+  }
+}

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /installer-dashboard
+Disallow: /installer-profile/new
+Disallow: /reset-password
+Disallow: /api/
+
+Sitemap: https://solmatch.co.za/sitemap.xml
