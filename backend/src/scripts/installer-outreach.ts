@@ -5,29 +5,39 @@ dotenv.config();
 const resend = new Resend(process.env.RESEND_API_KEY);
 const SIGNUP_URL = "https://solmatch.co.za/register";
 
-// ─── ADD YOUR INSTALLER CONTACTS HERE ────────────────────────────────────────
-// Fields: firstName, companyName, city, email
-// The more detail the better — city and company are used to personalise each email.
-const installers: Installer[] = [
-  // { firstName: "Johan", companyName: "SunPower Installations", city: "Pretoria", email: "johan@sunpowerinstallations.co.za" },
-  // { firstName: "Pieter", companyName: "Cape Solar", city: "Cape Town", email: "pieter@capesolar.co.za" },
-];
-// ─────────────────────────────────────────────────────────────────────────────
-
 interface Installer {
-  firstName: string;
+  firstName?: string;
   companyName: string;
   city: string;
   email: string;
 }
 
+const installers: Installer[] = [
+  // Cape Town / Western Cape
+  { firstName: "Francois", companyName: "Lunar Solar",          city: "Cape Town",    email: "hello@lunarsolar.co.za" },
+  { firstName: "Liam",     companyName: "CapeTown.Solar",        city: "Cape Town",    email: "Liam@capetown.solar" },
+  { firstName: "Wouter",   companyName: "Winelands Solar",       city: "Stellenbosch", email: "wouter@winelandssolar.co.za" },
+  { firstName: "Stephen",  companyName: "Stephen Solar",         city: "Cape Town",    email: "stephentimothy158@gmail.com" },
+  {                         companyName: "Solar Specialist SA",   city: "Cape Town",    email: "Info@solarspecialist.co.za" },
+  // Johannesburg / Gauteng
+  { firstName: "Jaco",     companyName: "Solareff",              city: "Johannesburg", email: "info@solareff.co.za" },
+  {                         companyName: "Sunor Energy",          city: "Johannesburg", email: "info@sunor.co.za" },
+  // Durban / KZN
+  { firstName: "Bernie",   companyName: "GC Solar KZN",          city: "Durban",       email: "bernie@gcsolarkzn.co.za" },
+  {                         companyName: "DurbanSolar",           city: "Durban",       email: "info@durbansolar.co.za" },
+  {                         companyName: "Solar Shine Energy",    city: "Durban",       email: "admin@solarshine.co.za" },
+  {                         companyName: "Durban Solar Power",    city: "Ballito",      email: "info@durbansolarpower.co.za" },
+  // Eastern Cape
+  { firstName: "Nic",      companyName: "Ellies East London",    city: "East London",  email: "nic@elliesel.co.za" },
+];
+
 function buildEmail(installer: Installer): string {
   const { firstName, companyName, city } = installer;
+  const greeting = firstName ? `Hi ${firstName},` : `Hi there,`;
 
-  // Vary the opening line so batch doesn't feel templated
   const openings = [
     `I came across ${companyName} while looking for solar installers in ${city} and wanted to reach out directly.`,
-    `I was researching solar installers in the ${city} area and ${companyName} came up — glad I found you.`,
+    `I was researching solar installers in the ${city} area and ${companyName} came up — really glad I found you.`,
     `Found ${companyName} while doing some research on installers in ${city} and thought it was worth getting in touch.`,
   ];
   const opening = openings[Math.floor(Math.random() * openings.length)];
@@ -48,17 +58,17 @@ function buildEmail(installer: Installer): string {
 </style></head><body>
 <div class="wrap">
 
-  <p>Hi ${firstName},</p>
+  <p>${greeting}</p>
 
   <p>${opening}</p>
 
-  <p>I'm Aidan — I started SolMatch because I kept hearing the same story from homeowners: they wanted to go solar, had the budget, but had no reliable way to find a trustworthy installer. Too many bad experiences with companies that overpromised, underdelivered, or disappeared after installation.</p>
+  <p>I'm Aidan — I started SolMatch because I kept hearing the same story from homeowners across South Africa: they wanted to go solar, had the budget, but had no reliable way to find a trustworthy installer. Too many bad experiences with companies that overpromised, underdelivered, or just disappeared after installation.</p>
 
-  <p>So I built a marketplace that fixes that. Homeowners come to SolMatch, run a savings calculation, and request quotes from verified installers in their area. No cold calling, no ad spend on your end — just warm leads from people who are already ready to buy.</p>
+  <p>So I built a marketplace that fixes that. Homeowners come to SolMatch, run a personalised savings calculation, and request quotes from verified installers in their area. No cold calling on your end, no ad spend — just warm leads from people who've already done their research and are ready to move forward.</p>
 
-  <p>Right now I'm bringing on a small number of installers in ${city} and I'd love ${companyName} to be one of them. Creating a profile takes about 10 minutes, it's completely free to get started, and you only pay a small lead fee when you win business.</p>
+  <p>Right now I'm bringing on a small number of installers in ${city} and I'd love ${companyName} to be one of them. Setting up a profile takes about 10 minutes, it's completely free to get started, and you only pay a small lead fee when you actually win the business.</p>
 
-  <p>If this sounds like it could work for you, you can set up your profile here:</p>
+  <p>If this sounds interesting, here's the link to get set up:</p>
 
   <div class="cta-wrap">
     <a href="${SIGNUP_URL}" class="btn">Create Your Free Profile →</a>
@@ -74,7 +84,7 @@ function buildEmail(installer: Installer): string {
   </div>
 
   <div class="footer">
-    <p>You're receiving this because we believe ${companyName} would be a great fit for our platform. If you'd rather not hear from us, just reply and I'll remove you from our list — no hard feelings.</p>
+    <p>You're receiving this because we think ${companyName} would be a great fit for our platform. If you'd rather not hear from us, just reply and I'll remove you from our list — no hard feelings at all.</p>
   </div>
 
 </div>
@@ -86,11 +96,6 @@ function sleep(ms: number) {
 }
 
 async function run() {
-  if (installers.length === 0) {
-    console.log("⚠️  No installers in the list. Add contacts to the installers array and run again.");
-    return;
-  }
-
   console.log(`📤 Starting outreach to ${installers.length} installer(s)...\n`);
   let sent = 0;
   let failed = 0;
@@ -105,13 +110,12 @@ async function run() {
         html: buildEmail(installer),
       });
 
-      console.log(`✅ Sent to ${installer.firstName} @ ${installer.companyName} (${installer.email})`);
+      console.log(`✅ Sent → ${installer.firstName ?? "team"} @ ${installer.companyName} (${installer.email})`);
       sent++;
 
-      // 1.5s delay between sends to stay well within rate limits
       await sleep(1500);
     } catch (err: any) {
-      console.error(`❌ Failed for ${installer.email}: ${err.message}`);
+      console.error(`❌ Failed → ${installer.email}: ${err.message}`);
       failed++;
     }
   }
