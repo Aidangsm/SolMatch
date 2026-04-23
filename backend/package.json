@@ -6,7 +6,8 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "seed": "ts-node prisma/seed.ts",
-    "db:push": "prisma db push"
+    "db:push": "prisma db push",
+    "outreach": "ts-node src/scripts/installer-outreach.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
