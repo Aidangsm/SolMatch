@@ -185,7 +185,7 @@ function LeadCard({ lead, onPayAccept, onUpdate, updating, showActions }: {
         ) : (
           <span className="flex items-center gap-1.5 text-sm text-gray-400">
             <Lock className="w-3.5 h-3.5" />
-            Contact details unlock after paying the R500 lead fee
+            Contact details unlock after paying the R200 lead fee
           </span>
         )}
       </div>
@@ -194,7 +194,7 @@ function LeadCard({ lead, onPayAccept, onUpdate, updating, showActions }: {
         <div className="mt-3 space-y-2">
           <p className="text-xs text-gray-400 flex items-center gap-1">
             <CreditCard className="w-3 h-3" />
-            A once-off lead fee of <strong className="text-gray-600">R500</strong> is charged on acceptance via PayFast.
+            A once-off lead fee of <strong className="text-gray-600">R200</strong> is charged on acceptance via PayFast.
           </p>
           <div className="flex flex-wrap gap-2">
             <input
@@ -210,7 +210,7 @@ function LeadCard({ lead, onPayAccept, onUpdate, updating, showActions }: {
               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-white text-sm font-medium rounded-lg disabled:opacity-50"
             >
               <CreditCard className="w-3.5 h-3.5" />
-              {busy ? "Redirecting…" : "Pay R500 & Accept"}
+              {busy ? "Redirecting…" : "Pay R200 & Accept"}
             </button>
             <button
               disabled={busy}
