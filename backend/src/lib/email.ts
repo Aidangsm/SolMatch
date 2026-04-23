@@ -30,13 +30,17 @@ function wrap(body: string) {
 export async function sendWelcomeEmail(to: string, firstName: string) {
   await resend.emails.send({
     from: FROM, to, replyTo: REPLY_TO,
-    subject: "Welcome to SolMatch ☀️",
+    subject: "You're in — let's find you the perfect solar installer ☀️",
     html: wrap(`
       <p>Hi ${firstName},</p>
-      <p>Welcome to SolMatch — South Africa's solar installer marketplace.</p>
-      <p>You can now calculate your solar ROI and connect with verified installers near you.</p>
+      <p>Welcome aboard — really glad you made it here.</p>
+      <p>SolMatch was built because finding a trustworthy solar installer in South Africa felt like a gamble. Too many homeowners were getting burnt by dodgy quotes, fly-by-night companies, and zero accountability. We decided to fix that.</p>
+      <p>Every installer on our platform is verified, rated by real homeowners, and competes for your business — which means you get better prices, faster responses, and installers who actually show up.</p>
+      <p>Start by running your personalised solar savings calculation. It takes about 2 minutes and gives you a real picture of what going solar means for your electricity bill.</p>
       <p><a href="${BASE_URL}/calculator" class="btn">Calculate My Savings</a></p>
-      <p>If you did not create this account, please <a href="mailto:privacy@solmatch.co.za">contact us</a> immediately.</p>
+      <p>If you have any questions at all, just reply to this email — I read every one.</p>
+      <p>Aidan<br><span style="color:#9ca3af;font-size:13px;">Founder, SolMatch</span></p>
+      <p style="color:#9ca3af;font-size:12px;">If you didn't create this account, please <a href="mailto:privacy@solmatch.co.za">let us know</a> immediately.</p>
     `),
   });
 }
