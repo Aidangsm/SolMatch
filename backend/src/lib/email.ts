@@ -3,6 +3,7 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const FROM = "SolMatch <noreply@solmatch.co.za>";
+const REPLY_TO = "aidan@solmatch.co.za";
 const BASE_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 
 function wrap(body: string) {
@@ -28,7 +29,7 @@ function wrap(body: string) {
 
 export async function sendWelcomeEmail(to: string, firstName: string) {
   await resend.emails.send({
-    from: FROM, to,
+    from: FROM, to, replyTo: REPLY_TO,
     subject: "Welcome to SolMatch ☀️",
     html: wrap(`
       <p>Hi ${firstName},</p>
@@ -43,7 +44,7 @@ export async function sendWelcomeEmail(to: string, firstName: string) {
 export async function sendPasswordResetEmail(to: string, firstName: string, token: string) {
   const link = `${BASE_URL}/reset-password?token=${token}`;
   await resend.emails.send({
-    from: FROM, to,
+    from: FROM, to, replyTo: REPLY_TO,
     subject: "Reset your SolMatch password",
     html: wrap(`
       <p>Hi ${firstName},</p>
@@ -57,7 +58,7 @@ export async function sendPasswordResetEmail(to: string, firstName: string, toke
 
 export async function sendNewLeadEmail(to: string, installerName: string, homeownerCity: string, systemKw: number) {
   await resend.emails.send({
-    from: FROM, to,
+    from: FROM, to, replyTo: REPLY_TO,
     subject: "New quote request on SolMatch",
     html: wrap(`
       <p>Hi ${installerName},</p>
@@ -71,7 +72,7 @@ export async function sendNewLeadEmail(to: string, installerName: string, homeow
 export async function sendQuoteStatusEmail(to: string, firstName: string, installerName: string, status: "ACCEPTED" | "DECLINED") {
   const accepted = status === "ACCEPTED";
   await resend.emails.send({
-    from: FROM, to,
+    from: FROM, to, replyTo: REPLY_TO,
     subject: accepted ? `${installerName} accepted your quote request` : `Update on your quote request`,
     html: wrap(`
       <p>Hi ${firstName},</p>
