@@ -5,6 +5,7 @@ import { prisma } from "../lib/prisma";
 import { authenticate, requireRole, AuthRequest } from "../middleware/authenticate";
 import { validate } from "../middleware/validate";
 import { generalLimiter } from "../middleware/rateLimiter";
+import { sendInstallerWelcomeEmail } from "../lib/email";
 
 function sanitize(input: unknown): unknown {
   if (typeof input === "string") return sanitizeHtml(input, { allowedTags: [], allowedAttributes: {} });
@@ -128,6 +129,7 @@ router.post("/", authenticate, requireRole("INSTALLER"), validate(createInstalle
         certifications: JSON.stringify(clean.certifications),
       },
     });
+    sendInstallerWelcomeEmail(clean.email, clean.companyName, installer.id).catch(() => {});
     res.status(201).json(installer);
   } catch {
     res.status(500).json({ error: "Failed to create installer profile" });

@@ -69,6 +69,35 @@ export async function sendNewLeadEmail(to: string, installerName: string, homeow
   });
 }
 
+export async function sendInstallerWelcomeEmail(to: string, companyName: string, installerId: string) {
+  const profileUrl = `${BASE_URL}/installers/${installerId}`;
+  await resend.emails.send({
+    from: FROM, to, replyTo: REPLY_TO,
+    subject: "Your SolMatch profile is live ☀️",
+    html: wrap(`
+      <p>Hi ${companyName},</p>
+      <p>Your SolMatch installer profile is now live. Here's what happens next:</p>
+      <p style="margin:0 0 8px;"><strong>1. Homeowners find you</strong><br>
+      Homeowners in your area use our ROI calculator, then browse verified installers. Your profile will appear in their results.</p>
+      <p style="margin:0 0 8px;"><strong>2. They request a quote</strong><br>
+      When a homeowner requests a quote from you, you'll get an email notification with their system size, location and requirements.</p>
+      <p style="margin:0 0 8px;"><strong>3. You choose whether to respond</strong><br>
+      If the lead looks right for you, pay a once-off R200 lead fee to unlock their contact details. No monthly fees, no commitment — you're in full control.</p>
+      <p><a href="${BASE_URL}/installer-dashboard" class="btn">Go to your dashboard</a></p>
+      <p style="margin-top:24px;"><strong>💡 Tips to get more leads:</strong></p>
+      <ul style="color:#374151;line-height:1.8;padding-left:20px;margin:0 0 16px;">
+        <li>Add a company description — homeowners read these before choosing</li>
+        <li>Upload your logo so your profile stands out</li>
+        <li>Add your certifications (SAPVIA, ECSA, etc.)</li>
+        <li>Set your system size range so you only get relevant leads</li>
+      </ul>
+      <p><a href="${profileUrl}">View your public profile →</a></p>
+      <p>If you have any questions, just reply to this email.</p>
+      <p>Welcome aboard,<br>Aidan<br>Founder, SolMatch</p>
+    `),
+  });
+}
+
 export async function sendQuoteStatusEmail(to: string, firstName: string, installerName: string, status: "ACCEPTED" | "DECLINED") {
   const accepted = status === "ACCEPTED";
   await resend.emails.send({
