@@ -51,19 +51,21 @@ router.get("/", generalLimiter, async (req: Request, res: Response) => {
     const { province, city, minKw, maxKw, verified, page = "1", limit = "12" } = req.query;
 
     const where: Record<string, unknown> = {};
-    if (province) where.province = province;
+    if (province && typeof province === "string") where.province = province;
     if (city) where.city = { contains: city as string };
     if (verified === "true") where.verified = true;
     if (minKw) where.maxSystemSize = { gte: Number(minKw) };
     if (maxKw) where.minSystemSize = { lte: Number(maxKw) };
 
-    const skip = (Number(page) - 1) * Number(limit);
+    const safePage = Math.max(1, Number(page) || 1);
+    const safeLimit = Math.min(50, Math.max(1, Number(limit) || 12));
+    const skip = (safePage - 1) * safeLimit;
 
     const [installers, total] = await Promise.all([
       prisma.installer.findMany({
         where,
         skip,
-        take: Number(limit),
+        take: safeLimit,
         orderBy: [{ badgeActive: "desc" }, { avgRating: "desc" }],
         include: { user: { select: { firstName: true, lastName: true } } },
       }),
@@ -77,8 +79,8 @@ router.get("/", generalLimiter, async (req: Request, res: Response) => {
         certifications: JSON.parse(i.certifications),
       })),
       total,
-      page: Number(page),
-      totalPages: Math.ceil(total / Number(limit)),
+      page: safePage,
+      totalPages: Math.ceil(total / safeLimit),
     });
   } catch {
     res.status(500).json({ error: "Failed to fetch installers" });
@@ -133,7 +135,7 @@ router.post("/", authenticate, requireRole("INSTALLER"), validate(createInstalle
 });
 
 // Update installer profile
-router.put("/:id", authenticate, requireRole("INSTALLER", "ADMIN"), async (req: AuthRequest, res: Response) => {
+router.put("/:id", authenticate, requireRole("INSTALLER", "ADMIN"), validate(createInstallerSchema.partial()), async (req: AuthRequest, res: Response) => {
   try {
     const installer = await prisma.installer.findUnique({ where: { id: req.params.id } });
     if (!installer) {
@@ -144,12 +146,15 @@ router.put("/:id", authenticate, requireRole("INSTALLER", "ADMIN"), async (req: 
       res.status(403).json({ error: "Not your profile" });
       return;
     }
+    const clean = sanitize(req.body) as typeof req.body;
+    // Strip fields that only admins can set
+    const { verified, badgeActive, avgRating, totalReviews, ...safeFields } = clean;
     const updated = await prisma.installer.update({
       where: { id: req.params.id },
       data: {
-        ...req.body,
-        systemTypes: req.body.systemTypes ? JSON.stringify(req.body.systemTypes) : undefined,
-        certifications: req.body.certifications ? JSON.stringify(req.body.certifications) : undefined,
+        ...safeFields,
+        systemTypes: safeFields.systemTypes ? JSON.stringify(safeFields.systemTypes) : undefined,
+        certifications: safeFields.certifications ? JSON.stringify(safeFields.certifications) : undefined,
       },
     });
     res.json(updated);
@@ -159,15 +164,28 @@ router.put("/:id", authenticate, requireRole("INSTALLER", "ADMIN"), async (req: 
 });
 
 // Add review
-router.post("/:id/reviews", authenticate, validate(reviewSchema), async (req: AuthRequest, res: Response) => {
+router.post("/:id/reviews", authenticate, requireRole("HOMEOWNER"), validate(reviewSchema), async (req: AuthRequest, res: Response) => {
   try {
     const installer = await prisma.installer.findUnique({ where: { id: req.params.id } });
     if (!installer) {
       res.status(404).json({ error: "Installer not found" });
       return;
     }
+    // Block self-reviews and duplicate reviews
+    if (installer.userId === req.user!.userId) {
+      res.status(403).json({ error: "You cannot review your own profile" });
+      return;
+    }
+    const existing = await prisma.review.findFirst({
+      where: { installerId: req.params.id, reviewerId: req.user!.userId },
+    });
+    if (existing) {
+      res.status(409).json({ error: "You have already reviewed this installer" });
+      return;
+    }
+    const clean = sanitize(req.body) as typeof req.body;
     const review = await prisma.review.create({
-      data: { installerId: req.params.id, ...req.body },
+      data: { installerId: req.params.id, reviewerId: req.user!.userId, ...clean },
     });
     // Recalculate avg rating
     const agg = await prisma.review.aggregate({

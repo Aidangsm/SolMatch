@@ -133,6 +133,7 @@ model Payment {
 model Review {
   id           String   @id @default(cuid())
   installerId  String
+  reviewerId   String?
   reviewerName String
   rating       Int
   comment      String?
@@ -141,6 +142,7 @@ model Review {
   installer Installer @relation(fields: [installerId], references: [id])
 
   @@index([installerId])
+  @@index([reviewerId])
 }
 
 model ConsentLog {
