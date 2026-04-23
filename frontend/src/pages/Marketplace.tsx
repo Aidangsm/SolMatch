@@ -96,7 +96,19 @@ export default function Marketplace() {
           ))}
         </div>
       ) : installers.length === 0 ? (
-        <div className="text-center py-20 text-gray-500">No installers found matching your criteria.</div>
+        <div className="text-center py-16">
+          <p className="text-gray-500 font-medium mb-2">No installers found matching your criteria.</p>
+          <p className="text-gray-400 text-sm mb-8">Try removing filters or selecting a different province.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto text-left">
+            {PROVINCES.slice(0, 3).map(p => (
+              <button key={p} onClick={() => { setProvince(p); setVerified(false); setCity(""); }}
+                className="card p-4 hover:border-solar-300 transition-colors text-sm">
+                <p className="font-semibold text-gray-800">{p}</p>
+                <p className="text-gray-400 text-xs mt-0.5">Browse installers</p>
+              </button>
+            ))}
+          </div>
+        </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {installers.map(i => <InstallerCard key={i.id} installer={i} />)}
