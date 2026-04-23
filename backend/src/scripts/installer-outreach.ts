@@ -64,7 +64,7 @@ function buildEmail(installer: Installer): string {
     <a href="${SIGNUP_URL}" class="btn">Create Your Free Profile →</a>
   </div>
 
-  <p>Happy to answer any questions — just reply to this email and you'll get me directly.</p>
+  <p>If you have any questions at all, just email me directly at <a href="mailto:aidan@solmatch.co.za" style="color:#ff7c0a;">aidan@solmatch.co.za</a> — I'm always happy to chat.</p>
 
   <div class="sig">
     <p class="name">Aidan Smit</p>
