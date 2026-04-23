@@ -73,7 +73,15 @@ router.get("/leads", authenticate, requireRole("INSTALLER"), async (req: AuthReq
       include: { homeowner: { select: { firstName: true, lastName: true, email: true, phone: true } } },
       orderBy: { createdAt: "desc" },
     });
-    res.json(quotes);
+
+    const redacted = quotes.map(q => ({
+      ...q,
+      homeowner: q.leadFeePaid
+        ? q.homeowner
+        : { firstName: q.homeowner.firstName, lastName: q.homeowner.lastName[0] + ".", email: null, phone: null },
+    }));
+
+    res.json(redacted);
   } catch {
     res.status(500).json({ error: "Failed to fetch leads" });
   }

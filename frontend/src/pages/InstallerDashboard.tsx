@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { api } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
-import { Clock, CheckCircle, XCircle, User, CreditCard } from "lucide-react";
+import { Clock, CheckCircle, XCircle, User, CreditCard, Lock } from "lucide-react";
 
 interface Lead {
   id: string;
@@ -16,7 +16,7 @@ interface Lead {
   propertyType: string;
   notes?: string;
   createdAt: string;
-  homeowner: { firstName: string; lastName: string; email: string; phone?: string };
+  homeowner: { firstName: string; lastName: string; email: string | null; phone?: string | null };
 }
 
 export default function InstallerDashboard() {
@@ -177,8 +177,17 @@ function LeadCard({ lead, onPayAccept, onUpdate, updating, showActions }: {
       {lead.notes && <p className="text-sm text-gray-600 mt-2 italic">"{lead.notes}"</p>}
 
       <div className="flex flex-wrap items-center gap-3 mt-3 pt-3 border-t border-gray-50">
-        <a href={`mailto:${lead.homeowner.email}`} className="text-sm text-solar-500 hover:underline">{lead.homeowner.email}</a>
-        {lead.homeowner.phone && <a href={`tel:${lead.homeowner.phone}`} className="text-sm text-solar-500 hover:underline">{lead.homeowner.phone}</a>}
+        {lead.leadFeePaid && lead.homeowner.email ? (
+          <>
+            <a href={`mailto:${lead.homeowner.email}`} className="text-sm text-solar-500 hover:underline">{lead.homeowner.email}</a>
+            {lead.homeowner.phone && <a href={`tel:${lead.homeowner.phone}`} className="text-sm text-solar-500 hover:underline">{lead.homeowner.phone}</a>}
+          </>
+        ) : (
+          <span className="flex items-center gap-1.5 text-sm text-gray-400">
+            <Lock className="w-3.5 h-3.5" />
+            Contact details unlock after paying the R500 lead fee
+          </span>
+        )}
       </div>
 
       {showActions && (
