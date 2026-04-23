@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 interface ROIData {
   monthlyBillZar: number;
   estimatedKwhPerMonth: number;
+  estimatedKwhPerDay: number;
+  estimatedKwhPerHour: number;
+  estimatedKwhPerMinute: number;
   recommendedSystemKw: number;
   estimatedSystemCost: number;
   estimatedMonthlySavings: number;
@@ -52,6 +55,16 @@ export default function ROIResult({ data }: { data: ROIData }) {
             <p className="text-gray-500 text-sm">20-Year Return</p>
             <p className={`font-bold text-2xl ${data.twentyYearSavings >= 0 ? "text-brand-600" : "text-red-500"}`}>{fmt(data.twentyYearSavings)}</p>
           </div>
+        </div>
+      </div>
+
+      <div className="card p-5">
+        <h3 className="font-semibold text-gray-900 mb-4">Your Electricity Consumption</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+          <div><p className="text-gray-500">Per Month</p><p className="font-bold text-lg">{data.estimatedKwhPerMonth} kWh</p></div>
+          <div><p className="text-gray-500">Per Day</p><p className="font-bold text-lg">{data.estimatedKwhPerDay} kWh</p></div>
+          <div><p className="text-gray-500">Per Hour</p><p className="font-bold text-lg">{data.estimatedKwhPerHour} kWh</p></div>
+          <div><p className="text-gray-500">Per Minute</p><p className="font-bold text-lg">{data.estimatedKwhPerMinute} kWh</p></div>
         </div>
       </div>
 

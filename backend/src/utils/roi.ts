@@ -15,6 +15,9 @@ export interface ROIInput {
 export interface ROIResult {
   monthlyBillZar: number;
   estimatedKwhPerMonth: number;
+  estimatedKwhPerDay: number;
+  estimatedKwhPerHour: number;
+  estimatedKwhPerMinute: number;
   recommendedSystemKw: number;
   estimatedSystemCost: number;
   estimatedMonthlySavings: number;
@@ -69,9 +72,15 @@ export function calculateROI(input: ROIInput): ROIResult {
   const panelWatts = 550;
   const panels = Math.ceil((systemKw * 1000) / panelWatts);
 
+  const kwhPerHour = kwhPerDay / 24;
+  const kwhPerMinute = kwhPerHour / 60;
+
   return {
     monthlyBillZar: monthlyBill,
     estimatedKwhPerMonth: Math.round(kwhPerMonth),
+    estimatedKwhPerDay: Math.round(kwhPerDay * 10) / 10,
+    estimatedKwhPerHour: Math.round(kwhPerHour * 100) / 100,
+    estimatedKwhPerMinute: Math.round(kwhPerMinute * 10000) / 10000,
     recommendedSystemKw: systemKw,
     estimatedSystemCost: Math.round(totalCost),
     estimatedMonthlySavings: Math.round(monthlySavings),
