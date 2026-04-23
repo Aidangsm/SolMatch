@@ -1,16 +1,8 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || "smtp.gmail.com",
-  port: Number(process.env.SMTP_PORT) || 587,
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER || "",
-    pass: process.env.SMTP_PASS || "",
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const FROM = `"SolMatch" <${process.env.SMTP_FROM || "noreply@solmatch.co.za"}>`;
+const FROM = "SolMatch <noreply@solmatch.co.za>";
 const BASE_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 
 function wrap(body: string) {
@@ -35,8 +27,7 @@ function wrap(body: string) {
 }
 
 export async function sendWelcomeEmail(to: string, firstName: string) {
-  if (!process.env.SMTP_USER) return;
-  await transporter.sendMail({
+  await resend.emails.send({
     from: FROM, to,
     subject: "Welcome to SolMatch ☀️",
     html: wrap(`
@@ -50,9 +41,8 @@ export async function sendWelcomeEmail(to: string, firstName: string) {
 }
 
 export async function sendPasswordResetEmail(to: string, firstName: string, token: string) {
-  if (!process.env.SMTP_USER) return;
   const link = `${BASE_URL}/reset-password?token=${token}`;
-  await transporter.sendMail({
+  await resend.emails.send({
     from: FROM, to,
     subject: "Reset your SolMatch password",
     html: wrap(`
@@ -66,8 +56,7 @@ export async function sendPasswordResetEmail(to: string, firstName: string, toke
 }
 
 export async function sendNewLeadEmail(to: string, installerName: string, homeownerCity: string, systemKw: number) {
-  if (!process.env.SMTP_USER) return;
-  await transporter.sendMail({
+  await resend.emails.send({
     from: FROM, to,
     subject: "New quote request on SolMatch",
     html: wrap(`
@@ -80,9 +69,8 @@ export async function sendNewLeadEmail(to: string, installerName: string, homeow
 }
 
 export async function sendQuoteStatusEmail(to: string, firstName: string, installerName: string, status: "ACCEPTED" | "DECLINED") {
-  if (!process.env.SMTP_USER) return;
   const accepted = status === "ACCEPTED";
-  await transporter.sendMail({
+  await resend.emails.send({
     from: FROM, to,
     subject: accepted ? `${installerName} accepted your quote request` : `Update on your quote request`,
     html: wrap(`
