@@ -38,6 +38,7 @@ const createInstallerSchema = z.object({
   maxSystemSize: z.number().optional(),
   priceRangeMin: z.number().optional(),
   priceRangeMax: z.number().optional(),
+  logoUrl: z.string().max(2_000_000).optional(),
 });
 
 const reviewSchema = z.object({
