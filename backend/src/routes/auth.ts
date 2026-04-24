@@ -6,7 +6,7 @@ import { prisma } from "../lib/prisma";
 import { validate } from "../middleware/validate";
 import { authLimiter } from "../middleware/rateLimiter";
 import { authenticate, AuthRequest } from "../middleware/authenticate";
-import { sendWelcomeEmail } from "../lib/email";
+import { sendWelcomeEmail, sendAdminNewSignupEmail } from "../lib/email";
 
 const router = Router();
 
@@ -68,8 +68,9 @@ router.post("/register", authLimiter, validate(registerSchema), async (req: Requ
       data: { token: refreshToken, userId: user.id, expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) },
     });
 
-    // Fire-and-forget welcome email
+    // Fire-and-forget welcome + admin notification
     sendWelcomeEmail(user.email, user.firstName).catch(() => {});
+    sendAdminNewSignupEmail(user.firstName, user.lastName, user.email, user.role).catch(() => {});
 
     res.cookie(REFRESH_COOKIE, refreshToken, COOKIE_OPTS);
     res.status(201).json({

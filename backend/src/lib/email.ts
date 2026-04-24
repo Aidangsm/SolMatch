@@ -98,6 +98,20 @@ export async function sendInstallerWelcomeEmail(to: string, companyName: string,
   });
 }
 
+export async function sendAdminNewSignupEmail(firstName: string, lastName: string, email: string, role: string) {
+  await resend.emails.send({
+    from: FROM, to: "aidangsmit@gmail.com",
+    subject: `New ${role.toLowerCase()} signup: ${firstName} ${lastName}`,
+    html: wrap(`
+      <p>A new user just registered on SolMatch.</p>
+      <p><strong>Name:</strong> ${firstName} ${lastName}<br>
+      <strong>Email:</strong> ${email}<br>
+      <strong>Role:</strong> ${role}</p>
+      <p><a href="${BASE_URL}/admin" class="btn">View Dashboard</a></p>
+    `),
+  });
+}
+
 export async function sendQuoteStatusEmail(to: string, firstName: string, installerName: string, status: "ACCEPTED" | "DECLINED") {
   const accepted = status === "ACCEPTED";
   await resend.emails.send({
