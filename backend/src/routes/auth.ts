@@ -69,8 +69,8 @@ router.post("/register", authLimiter, validate(registerSchema), async (req: Requ
     });
 
     // Fire-and-forget welcome + admin notification
-    sendWelcomeEmail(user.email, user.firstName).catch(() => {});
-    sendAdminNewSignupEmail(user.firstName, user.lastName, user.email, user.role).catch(() => {});
+    sendWelcomeEmail(user.email, user.firstName).catch((err) => console.error("Welcome email failed:", err));
+    sendAdminNewSignupEmail(user.firstName, user.lastName, user.email, user.role).catch((err) => console.error("Admin notification email failed:", err));
 
     res.cookie(REFRESH_COOKIE, refreshToken, COOKIE_OPTS);
     res.status(201).json({
