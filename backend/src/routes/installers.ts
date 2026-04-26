@@ -32,7 +32,7 @@ const createInstallerSchema = z.object({
   email: z.string().email(),
   website: z.string().url().optional().or(z.literal("")),
   yearsExperience: z.number().int().min(0).max(50).default(0),
-  systemTypes: z.array(z.enum(["residential","commercial","off-grid","hybrid"])).default([]),
+  systemTypes: z.array(z.enum(["residential","commercial","agricultural","off-grid","hybrid"])).default([]),
   certifications: z.array(z.string()).default([]),
   minSystemSize: z.number().optional(),
   maxSystemSize: z.number().optional(),

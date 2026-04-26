@@ -53,8 +53,8 @@ app.use(cors({
 }));
 
 app.use(cookieParser());
-app.use(express.json({ limit: "2mb" }));
-app.use(express.urlencoded({ extended: false, limit: "2mb" }));
+app.use(express.json({ limit: "4mb" }));
+app.use(express.urlencoded({ extended: false, limit: "4mb" }));
 app.use(generalLimiter);
 
 app.use("/api/auth", authRoutes);
@@ -69,13 +69,13 @@ app.get("/api/health", (_req, res) => res.json({ status: "ok", timestamp: new Da
 
 app.use((_req, res) => res.status(404).json({ error: "Route not found" }));
 
-app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  if (isProd) {
-    res.status(500).json({ error: "Internal server error" });
-  } else {
-    console.error(err.stack);
-    res.status(500).json({ error: err.message });
+app.use((err: Error & { status?: number; type?: string }, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  if (err.type === "entity.too.large") {
+    res.status(413).json({ error: "Request too large. Reduce image size and try again." });
+    return;
   }
+  if (!isProd) console.error(err.stack);
+  res.status(500).json({ error: "Internal server error" });
 });
 
 app.listen(PORT, () => {
