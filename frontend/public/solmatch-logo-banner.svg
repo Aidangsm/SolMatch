@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" width="900" height="300">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff9a3c"/>
+      <stop offset="100%" style="stop-color:#e85d00"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="300" rx="24" fill="url(#bg2)"/>
+
+  <!-- Sun rays -->
+  <g transform="translate(148, 150)" stroke="white" stroke-width="8" stroke-linecap="round" opacity="0.9">
+    <line x1="0" y1="-80" x2="0" y2="-96"/>
+    <line x1="0" y1="80" x2="0" y2="96"/>
+    <line x1="-80" y1="0" x2="-96" y2="0"/>
+    <line x1="80" y1="0" x2="96" y2="0"/>
+    <line x1="-57" y1="-57" x2="-68" y2="-68"/>
+    <line x1="57" y1="-57" x2="68" y2="-68"/>
+    <line x1="-57" y1="57" x2="-68" y2="68"/>
+    <line x1="57" y1="57" x2="68" y2="68"/>
+  </g>
+
+  <!-- Sun circle -->
+  <circle cx="148" cy="150" r="52" fill="white" opacity="0.15"/>
+  <circle cx="148" cy="150" r="42" fill="white" opacity="0.95"/>
+
+  <!-- Solar panel grid inside sun -->
+  <g transform="translate(148,150)" stroke="#ff7c0a" stroke-width="2.5" opacity="0.55">
+    <line x1="-22" y1="-15" x2="22" y2="-15"/>
+    <line x1="-22" y1="0" x2="22" y2="0"/>
+    <line x1="-22" y1="15" x2="22" y2="15"/>
+    <line x1="-11" y1="-23" x2="-11" y2="23"/>
+    <line x1="0" y1="-23" x2="0" y2="23"/>
+    <line x1="11" y1="-23" x2="11" y2="23"/>
+  </g>
+
+  <!-- SolMatch name -->
+  <text x="270" y="168" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="86" fill="white" letter-spacing="-1">SolMatch</text>
+
+  <!-- Tagline -->
+  <text x="272" y="210" font-family="Arial, Helvetica, sans-serif" font-weight="400" font-size="22" fill="white" opacity="0.8" letter-spacing="4">SOLAR INSTALLER MARKETPLACE · SOUTH AFRICA</text>
+</svg>

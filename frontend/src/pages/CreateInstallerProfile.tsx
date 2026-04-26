@@ -45,6 +45,21 @@ function Field({ label, error, hint, children }: { label: string; error?: string
 export default function CreateInstallerProfile() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [logoData, setLogoData] = useState<string | null>(null);
+
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 3_000_000) { setError("Logo must be under 3MB"); return; }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      setLogoPreview(result);
+      setLogoData(result);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -63,7 +78,7 @@ export default function CreateInstallerProfile() {
   const onSubmit = async (data: FormData) => {
     try {
       setError("");
-      await api.post("/installers", data);
+      await api.post("/installers", { ...data, logoUrl: logoData ?? undefined });
       navigate("/installer-dashboard");
     } catch (e: unknown) {
       const err = e as { response?: { data?: { error?: string } } };
@@ -77,6 +92,25 @@ export default function CreateInstallerProfile() {
       <p className="text-gray-500 text-sm mb-8">Your profile is how homeowners find and evaluate you. Fill it in completely to maximise leads.</p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* Logo Upload */}
+        <div className="card p-5 space-y-4">
+          <h2 className="font-bold text-gray-900">Company Logo</h2>
+          <div className="flex items-center gap-4">
+            <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 flex items-center justify-center overflow-hidden shrink-0">
+              {logoPreview
+                ? <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain" />
+                : <span className="text-xs text-gray-400 text-center px-2">No logo</span>}
+            </div>
+            <div>
+              <label className="btn-secondary cursor-pointer text-sm">
+                Upload Logo
+                <input type="file" accept="image/*" className="hidden" onChange={handleLogoChange} />
+              </label>
+              <p className="text-xs text-gray-400 mt-1">PNG, JPG, SVG · Max 3MB</p>
+            </div>
+          </div>
+        </div>
+
         {/* Business Details */}
         <div className="card p-5 space-y-4">
           <h2 className="font-bold text-gray-900">Business Details</h2>

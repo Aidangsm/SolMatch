@@ -15,6 +15,7 @@ interface Installer {
   systemTypes: string[];
   priceRangeMin?: number;
   priceRangeMax?: number;
+  logoUrl?: string;
 }
 
 export default function InstallerCard({ installer }: { installer: Installer }) {
@@ -24,11 +25,18 @@ export default function InstallerCard({ installer }: { installer: Installer }) {
         <div className="badge-featured self-start"><Zap className="w-3 h-3" /> Featured</div>
       )}
       <div className="flex items-start justify-between gap-2">
-        <div>
+        <div className="flex items-center gap-3">
+          {installer.logoUrl && (
+            <div className="w-10 h-10 rounded-xl overflow-hidden bg-gray-50 shrink-0">
+              <img src={installer.logoUrl} alt={installer.companyName} className="w-full h-full object-contain" />
+            </div>
+          )}
+          <div>
           <h3 className="font-bold text-gray-900">{installer.companyName}</h3>
           <div className="flex items-center gap-1 text-sm text-gray-500 mt-0.5">
             <MapPin className="w-3.5 h-3.5" />
             {installer.city}, {installer.province}
+          </div>
           </div>
         </div>
         {installer.verified && (

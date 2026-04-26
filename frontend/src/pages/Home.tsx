@@ -11,8 +11,15 @@ export default function Home() {
         canonical="/"
       />
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 30% 50%, #ff7c0a 0%, transparent 60%), radial-gradient(circle at 80% 20%, #ffc06d 0%, transparent 40%)" }} />
+      <section className="relative text-white overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src="/hero-bg_true.png"
+            alt="Solar panels at sunset"
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/70 to-gray-900/30" />
+        </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-solar-500/20 border border-solar-500/30 rounded-full text-solar-300 text-sm font-medium mb-6">
@@ -67,7 +74,7 @@ export default function Home() {
             <div key={step} className="card p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-solar-50 rounded-xl flex items-center justify-center">{icon}</div>
-                <span className="text-3xl font-black text-gray-100">0{step}</span>
+                <span className="text-3xl font-black text-gray-400">0{step}</span>
               </div>
               <h3 className="font-bold text-gray-900 text-lg mb-2">{title}</h3>
               <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>

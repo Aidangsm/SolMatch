@@ -24,6 +24,7 @@ interface InstallerDetail {
   certifications: string[];
   priceRangeMin?: number;
   priceRangeMax?: number;
+  logoUrl?: string;
   reviews: { id: string; rating: number; reviewerName: string; comment?: string; createdAt: string }[];
   user: { firstName: string; lastName: string; createdAt: string };
 }
@@ -55,8 +56,10 @@ export default function InstallerProfile() {
       {/* Header */}
       <div className="card p-6 mb-6">
         <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-          <div className="w-16 h-16 bg-solar-100 rounded-2xl flex items-center justify-center text-solar-600 font-bold text-2xl shrink-0">
-            {installer.companyName[0]}
+          <div className="w-16 h-16 rounded-2xl overflow-hidden shrink-0 bg-solar-100 flex items-center justify-center">
+            {installer.logoUrl
+              ? <img src={installer.logoUrl} alt={installer.companyName} className="w-full h-full object-contain" />
+              : <span className="text-solar-600 font-bold text-2xl">{installer.companyName[0]}</span>}
           </div>
           <div className="flex-1">
             <div className="flex flex-wrap items-center gap-2 mb-1">
